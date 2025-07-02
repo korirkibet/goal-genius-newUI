@@ -50,7 +50,7 @@ export default function Tips() {
     return date.toLocaleDateString('en-US');
   };
 
-  const returnDate = (dateString) => {
+  /*const returnDate = (dateString) => {
     const [year, month, day] = dateString.split('-').map(Number);
     const date = new Date(year, month - 1, day); // Month is zero-indexed
 
@@ -62,7 +62,17 @@ export default function Tips() {
 
     const options = { weekday: 'short', month: 'short', day: 'numeric' };
     return date.toLocaleDateString('en-US', options);
-  };
+  };*/
+
+  const returnDate = (dateString) => {
+  // Parse the date string properly (YYYY-MM-DD format)
+  const [year, month, day] = dateString.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
+  
+  // Format using locale-aware methods
+  const options = { weekday: 'short', month: 'short', day: 'numeric' };
+  return date.toLocaleDateString('en-US', options);
+};
 
   // 4. useEffects
 
@@ -104,7 +114,7 @@ export default function Tips() {
 
 
   // Fetch last 7 days of dates
-  useEffect(() => {
+  /*useEffect(() => {
     let dates = [];
     for (let i = 0; i < 7; i++) {
       let date = new Date();
@@ -112,7 +122,23 @@ export default function Tips() {
       dates.push(date.toISOString().split('T')[0]);
     }
     setDays(dates.reverse());
-  }, []);
+  }, []);*/
+  useEffect(() => {
+  let dates = [];
+  const today = new Date();
+  
+  for (let i = 0; i < 7; i++) {
+    let date = new Date(today);
+    date.setDate(date.getDate() - i);
+    // Use local date components
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    dates.push(`${year}-${month}-${day}`);
+  }
+  setDays(dates.reverse());
+}, []);
+
 
   // Set currentDate when days is available
   useEffect(() => {
