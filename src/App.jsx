@@ -1,11 +1,11 @@
-// App.js
 import { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { notificationState, userState } from './recoil/atoms';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, getUser } from './firebase';
-import { IoArrowUp } from "react-icons/io5";
+import { ArrowUp } from "lucide-react";
+import { motion, AnimatePresence } from 'framer-motion';
 
 import Topbar from './components/Topbar/Topbar';
 import Navbar from './components/Navbar/Navbar';
@@ -62,10 +62,10 @@ function App() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 200);
+      setIsScrolled(window.scrollY > 300);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -103,11 +103,23 @@ function App() {
             <Route path="users/:id" element={<ProtectedAdminRoute><EditUser /></ProtectedAdminRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-          {isScrolled && (
-            <button className="btn top" title="to top" onClick={handleScrollToTop}>
-              <IoArrowUp />
-            </button>
-          )}
+          <AnimatePresence>
+            {isScrolled && (
+              <motion.button
+                className="btn top"
+                title="Scroll to top"
+                onClick={handleScrollToTop}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.3 }}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <ArrowUp size={20} />
+              </motion.button>
+            )}
+          </AnimatePresence>
           <Footer />
         </>
       )}

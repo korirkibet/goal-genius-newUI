@@ -1,32 +1,68 @@
-.flyer{
+.flyer {
     width: 100%;
-    background: var(--light-blue);
-    padding: 5px 5px;
+    padding: 60px 20px;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
-    align-items: flex-end;
-    gap: 5px;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--light-blue) 0%, var(--light-color) 100%);
+    border-top: 1px solid var(--light-grey);
+    border-bottom: 1px solid var(--light-grey);
+    max-width: 1400px;
+    margin: 0 auto;
 
-    background: linear-gradient(to bottom, var(--light-blue), var(--lite));
+    .flyer-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 16px;
+        max-width: 600px;
 
-    h1{
-      &:first-of-type{
-        font-size: 18px;
-        color: var(--dark-blue);
-      }
+        .flyer-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--blue), var(--dark-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--lite);
+            margin-bottom: 8px;
+        }
 
-      &:last-of-type{
-        color: var(--lite);
-        font-size: 16px;
-        color: var(--grey);
-      }
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        p {
+            color: var(--grey);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        .btn {
+            margin-top: 8px;
+            padding: 14px 32px;
+            font-size: 1rem;
+        }
     }
 
-    .btn:hover {
-      background: var(--lite);
-      color: var(--grey);
+    @media (max-width: 768px) {
+        padding: 40px 20px;
 
+        .flyer-content {
+            h2 {
+                font-size: 1.2rem;
+            }
+
+            .btn {
+                padding: 12px 24px;
+                font-size: 0.9rem;
+            }
+        }
     }
 }

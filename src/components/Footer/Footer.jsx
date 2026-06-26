@@ -1,14 +1,15 @@
+import { motion } from 'framer-motion';
 import './Footer.scss';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { socialUrls } from '../../data';
-import { userState } from '../../recoil/atoms';
 import { useRecoilValue } from 'recoil';
+import { userState } from '../../recoil/atoms';
 import { useEffect, useState } from 'react';
+import { ArrowUpRight, Mail, MapPin, Phone } from 'lucide-react';
 
 const Footer = () => {
     const user = useRecoilValue(userState);
     const [isAdmin, setIsAdmin] = useState(false);
-    const location = useLocation();
 
     useEffect(() => {
         if (user && ['kkibetkkoir@gmail.com', 'charleykibet254@gmail.com', 'coongames8@gmail.com'].includes(user.email)) {
@@ -17,68 +18,95 @@ const Footer = () => {
             setIsAdmin(false);
         }
     }, [user]);
+
+    const footerLinks = [
+        {
+            title: 'Product',
+            links: [
+                { label: 'Tips', path: '/tips' },
+                { label: 'Pricing', path: '/pricing' },
+                { label: 'News', path: '/news' },
+            ]
+        },
+        {
+            title: 'Company',
+            links: [
+                { label: 'About', path: '/about' },
+                { label: 'Contact', path: '/contact' },
+                { label: 'FAQ', path: '/about#faq' },
+            ]
+        },
+        {
+            title: 'Account',
+            links: [
+                { label: 'Login', path: '/login' },
+                { label: 'Register', path: '/register' },
+            ]
+        },
+    ];
+
     return (
-        <div className='footer theme'>
-            <div className='social'>
-                <h2>Follow us</h2>
-                <div className="wrapper">
-                    {
-                        socialUrls.map(social => {
-                            return (
-                                <Link
-                                    to={social.url}
-                                    title={social.title}
-                                    target='_blank'
+        <motion.footer 
+            className="footer"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+        >
+            <div className="footer-container">
+                <div className="footer-main">
+                    <div className="footer-brand">
+                        <h3 className="gradient-text">GOAL GENIUS</h3>
+                        <p>Expert football predictions and tips for smarter betting decisions. Your trusted partner for accurate match forecasts.</p>
+                        <div className="footer-socials">
+                            {socialUrls.map(social => (
+                                <motion.a
                                     key={social.id}
+                                    href={social.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    title={social.title}
+                                    whileHover={{ scale: 1.15, y: -2 }}
+                                    whileTap={{ scale: 0.95 }}
                                 >
                                     {social.icon}
-                                </Link>
-                            );
-                        })
+                                </motion.a>
+                            ))}
+                        </div>
+                    </div>
 
-                    }
+                    <div className="footer-links">
+                        {footerLinks.map((section, idx) => (
+                            <div key={idx} className="footer-section">
+                                <h4>{section.title}</h4>
+                                <ul>
+                                    {section.links.map((link, i) => (
+                                        <li key={i}>
+                                            <Link to={link.path}>
+                                                {link.label}
+                                                <ArrowUpRight size={14} />
+                                            </Link>
+                                        </li>
+                                    ))}
+                                    {section.title === 'Account' && isAdmin && (
+                                        <li><Link to="/add-tip">Admin Panel</Link></li>
+                                    )}
+                                </ul>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="footer-bottom">
+                    <p>&copy; {new Date().getFullYear()} Goal Genius. All rights reserved.</p>
+                    <div className="footer-meta">
+                        <span><Mail size={14} /> support@goalgenius.com</span>
+                        <span><MapPin size={14} /> Kenya</span>
+                    </div>
                 </div>
             </div>
-
-            <div className='section-wrapper theme'>
-                <section>
-                    <h2>GoalGenius</h2>
-                    <div className='items-container theme'>
-                        <NavLink to='/' title='goal genius' state={{ from: location }}>Home</NavLink>
-                        <NavLink to='/pricing' title='pricing' state={{ from: location }}>Pricing</NavLink>
-                        <NavLink to='/tips' title='tips' state={{ from: location }}>Tips</NavLink>
-                        <NavLink to='/news' title='news' state={{ from: location }}>Our News</NavLink>
-                    </div>
-                </section>
-
-                <section>
-                    <h2>Useful Links</h2>
-                    <div className='items-container theme'>
-                        <NavLink to='/login' title='login' state={{ from: location }}>Sign In</NavLink>
-                        <NavLink to='/register' title='register' state={{ from: location }}>Get Started</NavLink>
-                        <NavLink to='/about' title='about us' state={{ from: location }}>About GoalGenius</NavLink>
-                        <NavLink to='/contact' title='get in touch' state={{ from: location }}>Contact Us</NavLink>
-                    </div>
-                </section>
-                {
-
-                    isAdmin &&
-                    (<section>
-                        <h2>Admin</h2>
-                        <div className='items-container theme'>
-                            <NavLink to='/add-tip' title='help' state={{ from: location }}>Add Tip</NavLink>
-                            <NavLink to='/add-post' title='services' state={{ from: location }}>Add Post</NavLink>
-                            <NavLink to='/users' title='store' state={{ from: location }}>All Users</NavLink>
-                        </div>
-                    </section>)}
-            </div>
-            <hr />
-            <div className='footer-bottom theme'>
-                <p>&copy; GoalGenius {new Date().getFullYear()}</p>
-                <NavLink to="/about/#faq" title='help' state={{ from: location }}>FAQ</NavLink>
-            </div>
-        </div>
+        </motion.footer>
     );
-}
+};
 
 export default Footer;

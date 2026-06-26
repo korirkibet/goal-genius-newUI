@@ -1,89 +1,123 @@
-.testimonials{
+.testimonials {
     width: 100%;
+    padding: 40px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     position: relative;
     background: linear-gradient(to bottom, var(--light-blue), var(--lite));
-    .wrapper{
+    max-width: 1400px;
+    margin: 0 auto;
+
+    .wrapper {
         width: 100%;
         height: fit-content;
         display: flex;
-        align-items: center;
+        align-items: stretch;
         justify-content: space-between;
         position: relative;
-        overflow-x: scroll;
-        scroll-snap-type: proximity;
-        scroll-margin: 5px;
-        &::-webkit-scrollbar{
-            width: 1px;
-            display: none;
+        overflow-x: auto;
+        scroll-snap-type: x proximity;
+        scroll-padding: 20px;
+        gap: 20px;
+        padding: 10px 0;
+
+        &::-webkit-scrollbar {
+            height: 4px;
         }
-          
-        &::-webkit-scrollbar-track{
-            display: none;
+
+        &::-webkit-scrollbar-track {
+            background: var(--light-grey);
+            border-radius: 2px;
         }
-          
-        &::-webkit-scrollbar-thumb{
+
+        &::-webkit-scrollbar-thumb {
             background: var(--dark-blue);
             border-radius: 2px;
-          }
+        }
 
-        .testimonial{
-            width: calc((100% - 30px) / 4);
-            min-width: 290px;
-            box-shadow: 0 8px 30px -7px var(--light-blue);
-            border-radius: 10px;
-            padding: 5px 5px;
-            margin: 5px 5px;
-            border: 0;
+        .testimonial {
+            min-width: 280px;
+            max-width: 320px;
+            flex: 1;
+            background: var(--lite);
+            border-radius: 16px;
+            padding: 28px 24px;
+            box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--light-grey);
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center; 
-
+            align-items: flex-start;
             justify-content: space-between;
+            scroll-snap-align: start;
+            transition: all 0.3s;
 
-            //background: linear-gradient(to right, var(--light-blue), var(--transparent));
-            &:hover{
-                box-shadow: var(--shadow);
-            }
-            h2{
-                width: 100%;
-                color: var(--grey);
-                font-size: 21px;
-                line-height: 1.3;
-                text-align: end;
-                &::before{
-                    content: "@";
-                    font-size: 20px;
-                    font-weight: bold;
-                }
+            &:hover {
+                box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.1);
+                border-color: var(--blue);
             }
 
-            
+            .quote-icon {
+                color: var(--blue);
+                opacity: 1;
+                margin-bottom: 16px;
+            }
 
-            .content{
+            .content {
                 width: 100%;
                 display: flex;
                 flex-direction: column;
-                align-items: center;
-                justify-content:space-evenly;
-                
+                align-items: flex-start;
+                gap: 12px;
+                flex: 1;
 
-                h1{
-                    width: 100%;
-                    font-size: 18px;
-                    color: var(--dark);
-                    text-align: start;
+                .plan-badge {
+                    font-size: 0.75rem;
+                    font-weight: 700;
+                    color: var(--blue);
+                    background: var(--light-blue);
+                    padding: 4px 12px;
+                    border-radius: 20px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
                 }
 
-                p{
-                    font-size: 18px;
-                    color: var(--dark);
-                    padding-bottom: 15px;
+                p {
+                    font-size: 0.95rem;
+                    color: var(--dark-grey);
+                    line-height: 1.7;
+                    flex: 1;
                 }
+            }
+
+            .author {
+                width: 100%;
+                color: var(--grey);
+                font-size: 0.9rem;
+                font-weight: 600;
+                text-align: left;
+                margin-top: 16px;
+                padding-top: 16px;
+                border-top: 1px solid var(--light-grey);
+
+                &::before {
+                    content: "@";
+                    color: var(--blue);
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 768px) {
+        .wrapper {
+            gap: 12px;
+            padding: 10px 16px;
+
+            .testimonial {
+                min-width: 260px;
+                padding: 20px 16px;
             }
         }
     }

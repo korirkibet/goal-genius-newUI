@@ -1,58 +1,78 @@
-.featured{
+.featured {
     width: 100%;
     display: flex;
     align-items: center;
     flex-direction: column;
-    padding: 10px 0;
-    .wrapper{
+    padding: 60px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+
+    h1 {
+        margin-bottom: 40px;
+    }
+
+    .wrapper {
         width: 100%;
         display: grid;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 10px;
         grid-template-columns: repeat(4, 1fr);
-        .item{
+        gap: 20px;
+        max-width: 1200px;
+
+        .item {
             width: 100%;
-            max-width: 300px; 
-            padding: 10px 5px;
+            padding: 28px 20px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            text-decoration: none;
-            gap: 10px;
-            background: linear-gradient(to bottom, var(--lite), var(--transparent), var(--light-blue));
-            .emoji{
-                font-size: 22px;
+            gap: 16px;
+            background: var(--lite);
+            border-radius: 16px;
+            box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--light-grey);
+            cursor: default;
+            transition: all 0.3s;
+
+            .icon-wrapper {
+                width: 48px;
+                height: 48px;
+                border-radius: 12px;
+                background: var(--light-blue);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--blue);
+                flex-shrink: 0;
             }
 
-            h3{
-                font-size: 18px;
-                height: 100%;
+            h3 {
+                font-size: 1rem;
+                font-weight: 600;
+                color: var(--dark);
+                text-align: left;
                 flex: 1;
-                text-align: center;
+            }
+
+            &:hover {
+                box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.1);
+                border-color: var(--blue);
             }
         }
+    }
 
-        
-        @media screen and (max-width: 693px){
-            &{
-                grid-template-columns: repeat(2, 1fr);
-                gap: 5px;
+    @media (max-width: 1024px) {
+        .wrapper {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
 
-                .item{
-                    padding: 5px 5px;
-                    gap: 5px;
+    @media (max-width: 640px) {
+        padding: 40px 16px;
 
-                    .emoji{
-                        font-size: 16px;
-                    }
+        .wrapper {
+            grid-template-columns: 1fr;
+            gap: 12px;
 
-                    h3{
-                        font-size: 16px;
-                        font-weight: 300;
-                    }
-                }
+            .item {
+                padding: 20px 16px;
             }
         }
     }

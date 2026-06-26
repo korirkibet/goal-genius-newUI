@@ -13,21 +13,31 @@ import { useSetRecoilState } from 'recoil';
 import { notificationState } from '../../recoil/atoms';
 import AppHelmet from '../AppHelmet';
 import AlertAction from '../../components/AlertAction/AlertAction';
+import { motion } from 'framer-motion';
 
 export default function Home() {
   const [news, setNews] = useState([]);
-
   const setNotification = useSetRecoilState(notificationState);
 
   useEffect(() => {
-    // Call getNews only after the component is fully mounted
     const fetchData = () => {
       getNews(4, setNews, setNotification);
     };
+    fetchData();
+  }, []);
 
-    fetchData(); // Fetch news when component mounts
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
 
-  }, []); // Empty dependency array ensures it runs only once, after mounting
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+  };
 
   return (
     <div className='Home'>
@@ -37,17 +47,36 @@ export default function Home() {
       <Slider />
       <Featured />
       <Pricing />
-      {news.length > 0 && <>
-        <h1>News Feed</h1>
-        <h2>Explore Popular Posts 🔥</h2>
-        <div className='post-container'>
-          {news.map((blog) => <NewsItem key={blog.id} data={blog} />)}
-        </div>
-      </>}
+      {news.length > 0 && (
+        <motion.section
+          className="news-section"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          variants={containerVariants}
+        >
+          <motion.h1 variants={itemVariants}>News Feed</motion.h1>
+          <motion.h2 variants={itemVariants}>Explore Popular Posts</motion.h2>
+          <motion.div className='post-container' variants={containerVariants}>
+            {news.map((blog) => (
+              <motion.div key={blog.id} variants={itemVariants}>
+                <NewsItem data={blog} />
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.section>
+      )}
       <Flyer />
-      <h1>Testimonials</h1>
-      <h2>What clients say</h2>
-      <Testimonials />
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-50px' }}
+        variants={containerVariants}
+      >
+        <motion.h1 variants={itemVariants}>Testimonials</motion.h1>
+        <motion.h2 variants={itemVariants}>What clients say</motion.h2>
+        <Testimonials />
+      </motion.section>
       <Newsletter />
     </div>
   )

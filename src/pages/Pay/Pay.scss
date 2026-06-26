@@ -1,70 +1,288 @@
-.pay{
-    width: 100%;
-    min-height: calc(100vh - 95px);
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    flex-direction: column;
-    background: linear-gradient(to bottom, var(--transparent), var(--light-blue));
+.pay {
+  width: 100%;
+  min-height: calc(100vh - 102px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: linear-gradient(180deg, var(--light-color) 0%, var(--light-blue) 50%, var(--light-color) 100%);
+  padding: 40px 20px;
 
-    h4{
-      text-align: center;
+  .pay-container {
+    width: 100%;
+    max-width: 520px;
+    background: var(--lite);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    overflow: hidden;
+  }
+
+  .pay-header {
+    text-align: center;
+    margin-bottom: 32px;
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 8px;
+      letter-spacing: 0;
+      text-transform: none;
     }
-    
-    form.method{
-        width: 100%;
-        max-width: 800px;
-        gap: 30px;
+
+    .pay-subtitle {
+      color: var(--grey);
+      font-size: 0.9rem;
+    }
+  }
+
+  .pay-summary {
+    background: linear-gradient(135deg, var(--light-blue), var(--light-color));
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 32px;
+    border: 1px solid rgba(5, 146, 18, 0.1);
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &.total {
+        margin-top: 8px;
+        padding-top: 16px;
+        border-top: 2px solid var(--blue);
+
+        .label {
+          font-weight: 700;
+          color: var(--dark);
+        }
+
+        .value {
+          font-weight: 800;
+          color: var(--blue);
+          font-size: 1.3rem;
+        }
+      }
+
+      .label {
+        color: var(--grey);
+        font-size: 0.9rem;
+      }
+
+      .value {
+        color: var(--dark);
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+    }
+  }
+
+  .payment-methods {
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 16px;
+    }
+
+    .method-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+
+      .method-tab {
+        flex: 1;
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 5px 5px;
+        gap: 8px;
+        padding: 14px 16px;
+        border-radius: 12px;
+        border: 2px solid var(--light-grey);
+        background: var(--lite);
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: var(--dark-grey);
 
-        fieldset{
-            width: 100%;
-            max-width: 250px;
-            padding: 0;
-            border: 0;
-            position: relative;
-            display: flex;
-            justify-content: space-between;
-            label{
-                text-transform: uppercase;
-                letter-spacing: .1rem;
-                background: #E8E8E8;
-                text-align: center;
-                padding: .5em;
-                cursor: pointer;
-                width: 100%;
-                border-radius: .5rem;
-                border: 1px solid #ccc;
-                position: relative;
-                z-index: 1;
-
-                &:hover{
-                    background: #D8D8D8;
-                }
-              }
-
-            
-              input[type="radio"]{
-                visibility: hidden;
-                position: absolute;
-                cursor: pointer;
-              }
-              input[type="radio"]:checked{
-                ~ label{
-                  background: var(--dark-blue);
-                  color: var(--lite);
-                  box-shadow: 0 0.2em 0.45em 0.1em rgba(0,0,0, 0.4);
-                  transform: scale(1.05);
-                  animation: checked 200ms 1;
-                  border: 1px solid var(--dark-blue);
-                  position: relative;
-                  z-index: 5;
-                }
-              } 
+        &:hover {
+          border-color: var(--blue);
+          color: var(--blue);
         }
+
+        &.active {
+          border-color: var(--blue);
+          background: var(--light-blue);
+          color: var(--blue);
+        }
+
+        svg {
+          flex-shrink: 0;
+        }
+      }
     }
+  }
+
+  .payment-form {
+    .input-group {
+      margin-bottom: 20px;
+
+      label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 8px;
+      }
+
+      input {
+        width: 100%;
+        padding: 14px 16px;
+        border: 2px solid var(--light-grey);
+        border-radius: 12px;
+        font-size: 1rem;
+        color: var(--dark);
+        background: var(--lite);
+        transition: all 0.3s;
+
+        &:focus {
+          outline: none;
+          border-color: var(--blue);
+          box-shadow: 0 0 0 3px rgba(5, 146, 18, 0.1);
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+
+      .input-hint {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--grey);
+        margin-top: 6px;
+      }
+    }
+
+    .status-pending,
+    .status-success,
+    .status-failed {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .status-pending {
+      background: var(--light-yellow);
+      color: var(--dark-yellow);
+      border: 1px solid var(--yellow);
+    }
+
+    .status-success {
+      background: var(--light-green);
+      color: var(--dark-green);
+      border: 1px solid var(--green);
+    }
+
+    .status-failed {
+      background: var(--light-red);
+      color: var(--dark-red);
+      border: 1px solid var(--red);
+    }
+  }
+
+  .btn-full {
+    width: 100%;
+    padding: 16px;
+    font-size: 1rem;
+    border-radius: 12px;
+    gap: 10px;
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+  }
+
+  .paystack-wrapper {
+    text-align: center;
+
+    .paystack-info {
+      color: var(--grey);
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+  }
+
+  .pay-security {
+    margin-top: 32px;
+    text-align: center;
+    padding-top: 24px;
+    border-top: 1px solid var(--light-grey);
+
+    .security-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--green);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .security-text {
+      font-size: 0.75rem;
+      color: var(--grey);
+    }
+  }
+
+  .spin {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+}
+
+@media (max-width: 768px) {
+  .pay {
+    padding: 20px 12px;
+
+    .pay-container {
+      padding: 24px;
+    }
+
+    .pay-summary {
+      padding: 16px;
+    }
+
+    .method-tabs {
+      .method-tab {
+        padding: 12px;
+        font-size: 0.8rem;
+
+        span {
+          display: none;
+        }
+      }
+    }
+  }
 }

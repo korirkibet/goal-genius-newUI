@@ -1,4 +1,4 @@
-import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import TipCard from '../../components/TipCard/TipCard';
 import './Tips.scss';
 import { useEffect, useRef, useState } from 'react';
@@ -9,9 +9,10 @@ import { useRecoilState } from 'recoil';
 import { userState } from '../../recoil/atoms';
 import Loader from '../../components/Loader/Loader';
 import { getTips } from '../../firebase';
+import { motion } from 'framer-motion';
+import { Crown, Calendar } from 'lucide-react';
 
 export default function Tips() {
-  // 1. State Variables (useState)
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
@@ -27,10 +28,8 @@ export default function Tips() {
   const [gamesType, setGamesType] = useState("1X2");
   const [tips, setTips] = useState(null);
 
-  // 2. Other Constants
   const tabBoxRef = useRef();
 
-  // 3. Functions
   const handleIcons = () => {
     let scrollVal = Math.round(tabBoxRef.current.scrollLeft);
     let maxScrollableWidth = tabBoxRef.current.scrollWidth - tabBoxRef.current.clientWidth;
@@ -38,43 +37,22 @@ export default function Tips() {
     setLastIcon(maxScrollableWidth > scrollVal + 1 ? "flex" : "none");
   };
 
-
   const handleClick = (direction) => {
     const scrollAmount = direction === "left" ? -350 : 350;
     tabBoxRef.current.scrollLeft += scrollAmount;
   };
-
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US');
   };
 
-  /*const returnDate = (dateString) => {
+  const returnDate = (dateString) => {
     const [year, month, day] = dateString.split('-').map(Number);
-    const date = new Date(year, month - 1, day); // Month is zero-indexed
-
-    // Check if the date is invalid
-    if (isNaN(date.getTime())) {
-      console.error("Invalid date:", dateString);
-      return "Invalid Date";
-    }
-
+    const date = new Date(year, month - 1, day);
     const options = { weekday: 'short', month: 'short', day: 'numeric' };
     return date.toLocaleDateString('en-US', options);
-  };*/
-
-  const returnDate = (dateString) => {
-  // Parse the date string properly (YYYY-MM-DD format)
-  const [year, month, day] = dateString.split('-').map(Number);
-  const date = new Date(year, month - 1, day);
-  
-  // Format using locale-aware methods
-  const options = { weekday: 'short', month: 'short', day: 'numeric' };
-  return date.toLocaleDateString('en-US', options);
-};
-
-  // 4. useEffects
+  };
 
   useEffect(() => {
     const tabBox = tabBoxRef.current;
@@ -89,7 +67,7 @@ export default function Tips() {
       if (!isDragging) return;
       e.preventDefault();
       const x = e.pageX - tabBox.offsetLeft;
-      const walk = (x - startX) * 5; // Adjust scroll speed
+      const walk = (x - startX) * 5;
       tabBox.scrollLeft = scrollLeft - walk;
     };
 
@@ -108,57 +86,39 @@ export default function Tips() {
       tabBox.removeEventListener('mousemove', mouseMoveHandler);
       tabBox.removeEventListener('mouseup', mouseUpHandler);
       tabBox.removeEventListener('mouseleave', mouseUpHandler);
-      tabBox.removeEventListener('scroll', handleIcons); // Cleanup scroll listener
+      tabBox.removeEventListener('scroll', handleIcons);
     };
   }, [isDragging, startX, scrollLeft]);
 
-
-  // Fetch last 7 days of dates
-  /*useEffect(() => {
+  useEffect(() => {
     let dates = [];
+    const today = new Date();
     for (let i = 0; i < 7; i++) {
-      let date = new Date();
+      let date = new Date(today);
       date.setDate(date.getDate() - i);
-      dates.push(date.toISOString().split('T')[0]);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      dates.push(`${year}-${month}-${day}`);
     }
     setDays(dates.reverse());
-  }, []);*/
-  useEffect(() => {
-  let dates = [];
-  const today = new Date();
-  
-  for (let i = 0; i < 7; i++) {
-    let date = new Date(today);
-    date.setDate(date.getDate() - i);
-    // Use local date components
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    dates.push(`${year}-${month}-${day}`);
-  }
-  setDays(dates.reverse());
-}, []);
+  }, []);
 
-
-  // Set currentDate when days is available
   useEffect(() => {
     days && setCurrentDate(days[days.length - 1]);
   }, [days]);
-
 
   useEffect(() => {
     if (!tabBoxRef.current) return;
     const tabBox = tabBoxRef.current;
     tabBox.scrollLeft = tabBox.scrollWidth - tabBox.clientWidth;
     handleIcons();
-  }, [tabBoxRef.current]); // Depend on `tabBoxRef.current`
-
+  }, [tabBoxRef.current]);
 
   useEffect(() => {
     getTips(setTips, setLoading, formatDate(currentDate));
   }, [currentDate]);
 
-  // Filter tips into time slots
   useEffect(() => {
     if (tips !== null) {
       const groupedData = tips.reduce((acc, item) => {
@@ -194,7 +154,6 @@ export default function Tips() {
     }
   }, [tips]);
 
-  // Update premium status based on user state
   useEffect(() => {
     if (user && ['kkibetkkoir@gmail.com', 'charleykibet254@gmail.com', 'coongames8@gmail.com'].includes(user.email)) {
       setAdmin(true);
@@ -203,50 +162,68 @@ export default function Tips() {
     }
   }, [user]);
 
+  const typeLabels = {
+    "1X2": "WDW",
+    "CS": "CS",
+    "GG": "BTTS",
+    "OV_UN": "O/U",
+    "DC": "DC"
+  };
+
   return (
     <div className='tips'>
       <AppHelmet title={"Tips"} />
       <ScrollToTop />
+
+      <div className="tips-header">
+        <div className="tips-header-content">
+          <h1><Calendar size={24} /> Match Tips</h1>
+          <p>Expert predictions for today's matches</p>
+        </div>
+      </div>
+
       <div className="date-wrapper">
-        <div className="icon" style={{ display: firstIcon }}><MdArrowBackIos className='item' onClick={() => handleClick("left")} /></div>
-        <ul className={`tabs-box ${isDragging ? "dragging" : ""}`} ref={tabBoxRef} style={{
-          overflow: 'auto',
-          whiteSpace: 'nowrap',
-          cursor: isDragging ? 'grabbing' : 'grab',
-          userSelect: 'none'
-        }}>
+        <div className="icon" style={{ display: firstIcon }}>
+          <button className="scroll-btn" onClick={() => handleClick("left")}>
+            <ChevronLeft size={20} />
+          </button>
+        </div>
+        <ul className={`tabs-box ${isDragging ? "dragging" : ""}`} ref={tabBoxRef}>
           {days && days.map((day) => (
-            <li className={`tab ${(currentDate === day) && 'active'}`} onClick={() => setCurrentDate(day)} key={days.indexOf(day)} aria-label={day}>
-              <span>{returnDate(day).split(" ")[0]}</span>
-              <span>{returnDate(day).split(" ")[1]}  {returnDate(day).split(" ")[2]}</span>
+            <li
+              className={`tab ${(currentDate === day) && 'active'}`}
+              onClick={() => setCurrentDate(day)}
+              key={day}
+            >
+              <span className="day-name">{returnDate(day).split(" ")[0]}</span>
+              <span className="day-date">{returnDate(day).split(" ")[1]} {returnDate(day).split(" ")[2]}</span>
             </li>
           ))}
         </ul>
-        <div className="icon" style={{ display: lastIcon }}><MdArrowForwardIos className='item' onClick={() => handleClick("right")} /></div>
+        <div className="icon" style={{ display: lastIcon }}>
+          <button className="scroll-btn" onClick={() => handleClick("right")}>
+            <ChevronRight size={20} />
+          </button>
+        </div>
       </div>
-      <NavLink to={`${user && user.isPremium ? '/plans' : "/pricing"}`} className={"subscribe-btn"}>SUBSCRIBE TO VIEW TIPS</NavLink>
-      <form className="type">
-        <fieldset>
-          <input name="games-type" type="radio" value={"1X2"} id="1X2" checked={gamesType === "1X2"} onChange={(e) => setGamesType(e.target.value)} />
-          <label htmlFor="1X2">WDW (1X2)</label>
-        </fieldset>
-        <fieldset>
-          <input name="games-type" type="radio" value={"CS"} id="CS" checked={gamesType === "CS"} onChange={(e) => setGamesType(e.target.value)} />
-          <label htmlFor="CS">Goals (CS)</label>
-        </fieldset>
-        <fieldset>
-          <input name="games-type" type="radio" value={"GG"} id="GG" checked={gamesType === "GG"} onChange={(e) => setGamesType(e.target.value)} />
-          <label htmlFor="GG">BTTS (GG/NG)</label>
-        </fieldset>
-        <fieldset>
-          <input name="games-type" type="radio" value={"OV_UN"} id="OV_UN" checked={gamesType === "OV_UN"} onChange={(e) => setGamesType(e.target.value)} />
-          <label htmlFor="OV_UN">TOTAL (OV/UN)</label>
-        </fieldset>
-        <fieldset>
-          <input name="games-type" type="radio" value={"DC"} id="DC" checked={gamesType === "DC"} onChange={(e) => setGamesType(e.target.value)} />
-          <label htmlFor="DC">DC 1X2</label>
-        </fieldset>
-      </form>
+
+      <NavLink to={`${user && user.isPremium ? '/plans' : "/pricing"}`} className={"subscribe-btn"}>
+        <Crown size={16} />
+        SUBSCRIBE TO VIEW TIPS
+      </NavLink>
+
+      <div className="type-filter">
+        {Object.keys(typeLabels).map((type) => (
+          <button
+            key={type}
+            className={`type-btn ${gamesType === type ? 'active' : ''}`}
+            onClick={() => setGamesType(type)}
+          >
+            {typeLabels[type]}
+          </button>
+        ))}
+      </div>
+
       {loading && <Loader />}
       {!loading && (
         <>
@@ -258,15 +235,36 @@ export default function Tips() {
               'Night': 'Night (6PM-12AM)'
             }[filteredTip.timeSlot];
 
+            const filteredItems = filteredTip.items.filter(doc => doc.type === gamesType);
+
+            if (filteredItems.length === 0) return null;
+
             return (
-              <div className="container" key={filteredTip.timeSlot}>
-                {filteredTip.items && filteredTip.items.filter(doc => doc.type === gamesType).length !== 0 && (<h2 className='title'>{timeSlotDescription}</h2>)}
-                <div className="tips-content container">
-                  {filteredTip.items.filter(doc => doc.type === gamesType).map((tip, index) => (
-                    <TipCard key={index} tip={tip} timeSlot={timeSlotDescription} isAdmin={isAdmin} plan={user && user.plan ? user.plan : null} today={formatDate(days[days.length - 1])} />
+              <motion.div
+                className="tips-section"
+                key={filteredTip.timeSlot}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
+                <h2 className='section-title'>
+                  <span className="time-badge">{filteredTip.timeSlot}</span>
+                  {timeSlotDescription}
+                </h2>
+                <div className="tips-grid">
+                  {filteredItems.map((tip, index) => (
+                    <TipCard
+                      key={index}
+                      tip={tip}
+                      timeSlot={timeSlotDescription}
+                      isAdmin={isAdmin}
+                      plan={user && user.plan ? user.plan : null}
+                      today={formatDate(days[days.length - 1])}
+                    />
                   ))}
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </>
