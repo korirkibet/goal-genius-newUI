@@ -2,7 +2,7 @@ import { useState } from 'react';
 import './Faq.scss';
 import { faqs } from '../../data';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, HelpCircle } from 'lucide-react';
+import { ChevronDown, Circle as HelpCircle } from 'lucide-react';
 
 export default function Faq() {
   const [activeFaq, setActiveFaq] = useState(null);

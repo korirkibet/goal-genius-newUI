@@ -4,7 +4,7 @@ import NewsItem from '../../components/NewsItem/NewsItem';
 import ScrollToTop from '../ScrollToTop';
 import { fetchData } from '../../firebase';
 import Loader from '../../components/Loader/Loader';
-import { Newspaper, ChevronDown, Filter } from 'lucide-react';
+import { Newspaper, ChevronDown, ListFilter as Filter } from 'lucide-react';
 import AppHelmet from '../AppHelmet';
 import { notificationState } from '../../recoil/atoms';
 import { useSetRecoilState } from 'recoil';

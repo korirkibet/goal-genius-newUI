@@ -11,7 +11,7 @@ import { getUser, updateUserPlan } from '../../firebase';
 import { PaystackButton } from 'react-paystack';
 import { motion } from 'framer-motion';
 import { initializePayment, pollPaymentStatus, STATUS_MESSAGES } from '../../services/payment';
-import { Smartphone, CreditCard, Loader2, CheckCircle2, AlertCircle, Shield, Lock } from 'lucide-react';
+import { Smartphone, CreditCard, Loader as Loader2, CircleCheck as CheckCircle2, CircleAlert as AlertCircle, Shield, Lock } from 'lucide-react';
 
 const PAYMENT_METHODS = {
   MPESA: 'mpesa',

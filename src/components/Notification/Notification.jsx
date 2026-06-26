@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { notificationState } from '../../recoil/atoms';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, AlertCircle, AlertTriangle, X } from 'lucide-react';
+import { CircleCheck as CheckCircle2, CircleAlert as AlertCircle, TriangleAlert as AlertTriangle, X } from 'lucide-react';
 import './Notification.scss';
 
 const icons = {
