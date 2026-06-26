@@ -1,176 +1,53 @@
-.admin-tips {
-  width: 100%;
-  min-height: calc(100vh - 102px);
-  padding: 40px 20px;
-  background: linear-gradient(180deg, var(--light-color) 0%, var(--light-blue) 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  .admin-container {
-    width: 100%;
-    max-width: 640px;
-    margin: 0 auto;
-    background: var(--lite);
-    border-radius: 20px;
-    box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.1);
-    padding: 40px;
-    overflow: hidden;
-  }
-
-  .admin-header {
-    margin-bottom: 32px;
-
-    .back-link {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--grey);
-      font-size: 0.85rem;
-      text-decoration: none;
-      margin-bottom: 16px;
-      transition: color 0.2s;
-
-      &:hover {
-        color: var(--blue);
-      }
-    }
-
-    h1 {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--dark);
-      text-transform: none;
-      letter-spacing: 1px;
-      text-align: left;
-      margin-bottom: 8px;
-    }
-
-    p {
-      color: var(--grey);
-      font-size: 0.95rem;
-    }
-  }
-
-  form {
+.admin-tips{
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-
-      label {
+    align-items: center;
+    justify-content: center;
+    form{
+        width:100%;
+        max-width: 900px;
+        font-weight: 400;
+        padding: 5px;
         display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 6px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: var(--dark-grey);
-      }
-
-      input[type="text"],
-      input[type="datetime-local"],
-      textarea,
-      select {
-        width: 100%;
-        padding: 12px 14px;
-        border: 2px solid var(--light-grey);
-        border-radius: 10px;
-        font-size: 0.95rem;
-        color: var(--dark);
-        background: var(--lite);
-        transition: all 0.3s;
-        outline: none;
-
-        &:focus {
-          border-color: var(--blue);
-          box-shadow: 0 0 0 3px rgba(5, 146, 18, 0.1);
-        }
-
-        &::placeholder {
-          color: var(--grey);
-        }
-      }
-
-      input[type="checkbox"] {
-        width: 20px;
-        height: 20px;
-        accent-color: var(--blue);
-        cursor: pointer;
-      }
-
-      .radio-group {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-
-        label {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          padding: 8px 14px;
-          border: 2px solid var(--light-grey);
-          border-radius: 8px;
-          cursor: pointer;
-          transition: all 0.2s;
-          font-size: 0.85rem;
-          font-weight: 500;
-
-          input[type="radio"] {
-            accent-color: var(--blue);
-          }
-
-          &:has(input:checked) {
-            border-color: var(--blue);
-            background: var(--light-blue);
-            color: var(--blue);
-          }
-
-          &:hover:not(:has(input:checked)) {
-            border-color: var(--blue);
-          }
-        }
-      }
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .form-actions {
-      display: flex;
-      gap: 12px;
-      margin-top: 8px;
-
-      .btn {
-        flex: 1;
         justify-content: center;
-        padding: 14px;
-        font-size: 1rem;
-      }
-    }
-  }
+        gap: 10px;
+        flex: 1;
+        .input-container{
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: .5rem;
+            width: 100%;
 
-  @media (max-width: 640px) {
-    padding: 20px 16px;
-
-    .admin-container {
-      padding: 24px;
+            &.vertical{
+                flex-direction: column;
+                *{
+                    width: 100%;
+                }
+            }
+      
+            label {
+                display: block;
+                font-size: 17px;
+                flex: 1;
+            }
+            
+            input {
+                border-radius: 5px;
+                height: inherit;
+                outline: none;
+                font-size: 16px;
+                padding: 5px 5px;
+                color: var(--dark);
+                margin-left: 5px;
+                flex: 1;
+                background: var(--light-blue);
+                border: .5px solid var(--blue);
+            }
+        }
     }
-
-    form {
-      .form-row {
-        grid-template-columns: 1fr;
-      }
-    }
-  }
 }

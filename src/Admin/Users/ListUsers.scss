@@ -1,72 +1,11 @@
 .list-users{
     width: 100%;
-    min-height: calc(100vh - 102px);
-    padding: 40px 20px;
-    background: linear-gradient(180deg, var(--light-color) 0%, var(--light-blue) 100%);
+    min-height: 100vh;
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    padding: 10px 5px;
+    gap: 5px;
 
-    .list-users-header {
-        width: 100%;
-        max-width: 1200px;
-        padding: 0 0 24px;
-
-        h1 {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-transform: none;
-            letter-spacing: 0;
-            text-align: left;
-            font-size: 1.5rem;
-            margin-bottom: 4px;
-
-            svg {
-                color: var(--blue);
-            }
-        }
-
-        p {
-            color: var(--grey);
-            font-size: 0.95rem;
-        }
-    }
-
-    .users-grid {
-        width: 100%;
-        max-width: 1200px;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 20px;
-        padding: 0 0 40px;
-    }
-
-    .empty-state {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 80px 20px;
-        text-align: center;
-        color: var(--grey);
-
-        svg {
-            color: var(--light-grey);
-            margin-bottom: 16px;
-        }
-
-        h3 {
-            color: var(--dark);
-            font-size: 1.2rem;
-        }
-    }
-
-    @media (max-width: 768px) {
-        padding: 20px 16px;
-
-        .users-grid {
-            grid-template-columns: 1fr;
-        }
-    }
 }
