@@ -1,19 +1,21 @@
-import {useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect, useState }  from 'react';
+import { useLocation, NavLink } from 'react-router-dom';
 import { doc, updateDoc } from 'firebase/firestore';
 import AppHelmet from '../../pages/AppHelmet';
 import Loader from '../../components/Loader/Loader';
+import '../AdminAdd.scss';
 import { db } from '../../firebase';
 import ScrollToTop from '../../pages/ScrollToTop';
 import { useSetRecoilState } from 'recoil';
 import { notificationState } from '../../recoil/atoms';
+import { motion } from 'framer-motion';
+import { User, Mail, Calendar, Crown, Save, ArrowLeft } from 'lucide-react';
 
 export default function EditUser() {
     const location = useLocation();
-    const [user, setUser] = useState(null);
+    const [user, setUserState] = useState(null);
     const [loading, setLoading] = useState(false);
     const setNotification = useSetRecoilState(notificationState);
-
 
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -23,15 +25,11 @@ export default function EditUser() {
 
     function toDateTimeLocal(dateString) {
         const date = new Date(dateString);
-    
-        // Extract components
         const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const month = String(date.getMonth() + 1).padStart(2, '1');
         const day = String(date.getDate()).padStart(2, '0');
         const hours = String(date.getHours()).padStart(2, '0');
         const minutes = String(date.getMinutes()).padStart(2, '0');
-    
-        // Format as YYYY-MM-DDTHH:mm
         return `${year}-${month}-${day}T${hours}:${minutes}`;
     }
 
@@ -45,9 +43,8 @@ export default function EditUser() {
         }
     }, [user]);
 
-
     useEffect(() => {
-        setUser(location.state)
+        setUserState(location.state)
     }, [location]);
 
     const handleSubmit = (e) => {
@@ -75,44 +72,47 @@ export default function EditUser() {
       })
     }
 
-  return (
-    <div className='admin-tips'>
-        <AppHelmet title={"Edit User"}/>
-        <ScrollToTop />
-        <h1>Update User</h1>
-        {loading && <Loader />}
-        {!loading && <form onSubmit={handleSubmit}>
-            <div className="input-container">
-                <label htmlFor="username">Username: </label>
-                <input type="text" placeholder='@someone' id='username' value={username} onChange={(e) => setUsername(e.target.value)}/>
-            </div>
-            <div className="input-container">
-                <label htmlFor="email">Email:</label>
-                <input type="text" placeholder='example@gmail.com' id='email' value={email} onChange={(e) => setEmail(e.target.value)} readOnly/>
-            </div>  
-            <div className="input-container">
-                <label htmlFor="subscription">Subscription:</label>
-                <input type="text" placeholder='subscription' id='subscription' value={subscription} onChange={(e) => setSubscription(e.target.value)}/>
-            </div>
-            {<div className="input-container">
-                <label htmlFor="subDate">Subscribed On: </label>
-                <input type="datetime-local" id='subDate' value={subDate} onChange={(e) => setSubDate(e.target.value)}/>
-            </div>}
-            <div className="input-container">
-                <label htmlFor="premium">Is premium</label>
-                <input type="checkbox" placeholder='premium' id='premium' onChange={(e) => setIsPremium(e.target.checked)} checked={isPremium}/>
-            </div>
-            
-            <span style={{
-                width: "100%",
-                display: "flex",
-                alignItems: "items",
-                justifyContent: "space-evenly"
-            }}>
-                <button type="submit" className='btn' title='Submit' aria-label="add">Update</button>
-                <span className="btn" onClick={() => window.history.back()}>DONE</span>
-            </span>
-        </form>}
-    </div>
-  )
+    return (
+        <div className='admin-tips'>
+            <AppHelmet title={"Edit User"}/>
+            <ScrollToTop />
+            <motion.div className="admin-container" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+                <div className="admin-header">
+                    <NavLink to="/users" className="back-link"><ArrowLeft size={18} /> Back to Users</NavLink>
+                    <h1><User size={24} /> Edit User</h1>
+                    <p>Manage user subscription details</p>
+                </div>
+                {loading && <Loader />}
+                {!loading && <form onSubmit={handleSubmit}>
+                    <div className="input-group">
+                        <label htmlFor="username"><User size={14} /> Username</label>
+                        <input type="text" placeholder='@someone' id='username' value={username} onChange={(e) => setUsername(e.target.value)}/>
+                    </div>
+                    <div className="input-group">
+                        <label htmlFor="email"><Mail size={14} /> Email</label>
+                        <input type="text" placeholder='example@gmail.com' id='email' value={email} onChange={(e) => setEmail(e.target.value)} readOnly/>
+                    </div>  
+                    <div className="input-group">
+                        <label htmlFor="subscription"><Crown size={14} /> Subscription</label>
+                        <input type="text" placeholder='Daily / Weekly / Monthly' id='subscription' value={subscription} onChange={(e) => setSubscription(e.target.value)}/>
+                    </div>
+                    <div className="input-group">
+                        <label htmlFor="subDate"><Calendar size={14} /> Subscribed On</label>
+                        <input type="datetime-local" id='subDate' value={subDate} onChange={(e) => setSubDate(e.target.value)}/>
+                    </div>
+                    <div className="input-group">
+                        <label className="checkbox-label">
+                            <input type="checkbox" id='premium' onChange={(e) => setIsPremium(e.target.checked)} checked={isPremium}/>
+                            <Crown size={16} /> Premium User
+                        </label>
+                    </div>
+                    
+                    <div className="form-actions">
+                        <NavLink to="/users" className="btn btn-ghost">Cancel</NavLink>
+                        <button type="submit" className='btn' title='Submit' aria-label="add"><Save size={16} /> Update User</button>
+                    </div>
+                </form>}
+            </motion.div>
+        </div>
+    )
 }

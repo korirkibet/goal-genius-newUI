@@ -2,13 +2,16 @@ import { motion } from 'framer-motion';
 import './Footer.scss';
 import { Link } from 'react-router-dom';
 import { socialUrls } from '../../data';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { userState } from '../../recoil/atoms';
 import { useEffect, useState } from 'react';
-import { ArrowUpRight, Mail, MapPin, Phone } from 'lucide-react';
+import { ArrowUpRight, Mail, MapPin } from 'lucide-react';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../firebase';
 
 const Footer = () => {
     const user = useRecoilValue(userState);
+    const setUser = useSetRecoilState(userState);
     const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
@@ -18,6 +21,11 @@ const Footer = () => {
             setIsAdmin(false);
         }
     }, [user]);
+
+    const handleLogout = () => {
+        signOut(auth);
+        setUser(null);
+    };
 
     const footerLinks = [
         {
@@ -38,10 +46,13 @@ const Footer = () => {
         },
         {
             title: 'Account',
-            links: [
+            links: user ? [
+                { label: 'Dashboard', path: '/tips' },
+                { label: 'Logout', path: '#', action: handleLogout },
+            ] : [
                 { label: 'Login', path: '/login' },
                 { label: 'Register', path: '/register' },
-            ]
+            ],
         },
     ];
 
@@ -82,14 +93,21 @@ const Footer = () => {
                                 <ul>
                                     {section.links.map((link, i) => (
                                         <li key={i}>
-                                            <Link to={link.path}>
-                                                {link.label}
-                                                <ArrowUpRight size={14} />
-                                            </Link>
+                                            {link.action ? (
+                                                <button onClick={link.action} className="footer-link-btn">
+                                                    {link.label}
+                                                    <ArrowUpRight size={14} />
+                                                </button>
+                                            ) : (
+                                                <Link to={link.path}>
+                                                    {link.label}
+                                                    <ArrowUpRight size={14} />
+                                                </Link>
+                                            )}
                                         </li>
                                     ))}
                                     {section.title === 'Account' && isAdmin && (
-                                        <li><Link to="/add-tip">Admin Panel</Link></li>
+                                        <li><Link to="/add-tip">Admin Panel <ArrowUpRight size={14} /></Link></li>
                                     )}
                                 </ul>
                             </div>

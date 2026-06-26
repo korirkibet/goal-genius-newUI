@@ -1,20 +1,14 @@
 import "./UserCard.scss";
-import backgroundImage from '../../assets/3.jpg';
-import backgroundImage2 from '../../assets/4.jpg';
-import backgroundImage3 from '../../assets/5.jpg';
-import backgroundImage4 from '../../assets/10.jpg';
-import { MdOutlineEmail } from 'react-icons/md';
 import { NavLink } from "react-router-dom";
+import { motion } from 'framer-motion';
+import { Crown, Mail, Calendar, User } from 'lucide-react';
 
 const UserCard = ({user}) => {
-
   function formatDate(dateString) {
     const date = new Date(dateString);
     let day = date.getDate();
-    
-    // Append the suffix for the day (st, nd, rd, th)
     const suffix = (day) => {
-        if (day > 3 && day < 21) return 'th'; // 11th to 13th are special
+        if (day > 3 && day < 21) return 'th';
         switch (day % 10) {
             case 1: return 'st';
             case 2: return 'nd';
@@ -22,29 +16,33 @@ const UserCard = ({user}) => {
             default: return 'th';
         }
     };
-    
-    const formattedDate = `${day}${suffix(day)} ${date.toLocaleString('en-GB', { month: 'long', year: 'numeric' })}`;
-    return formattedDate;
-}
+    return `${day}${suffix(day)} ${date.toLocaleString('en-GB', { month: 'long', year: 'numeric' })}`;
+  }
+
   return (  
-  <NavLink className="card"  to={`/users/${user.username ? "@" + user.username : user.email}`} state={user}>
-    <div className="cover-bg"  style={{
-      background: `#fff url(${user.isPremium ? backgroundImage3 : backgroundImage4}) center no-repeat`,
-    }}></div>
-    <div className="user-info-wrap">
-      <img src={user.isPremium ? backgroundImage : backgroundImage2} alt="" className="user-photo" />
-      <div className="user-info">
-        <div className="user-name">{user.subscription ? user.subscription : " Free"} Plan</div>
-        <p className="user-title">@{user.username}</p>
+  <NavLink className="user-card" to={`/users/${user.username ? "@" + user.username : user.email}`} state={user}>
+    <div className="card-header">
+      <div className="avatar">
+        <User size={24} />
       </div>
+      {user.isPremium && (
+        <div className="premium-badge">
+          <Crown size={14} /> PRO
+        </div>
+      )}
     </div>
-    <div className="user-bio">
-      <div className="data"><MdOutlineEmail className="mail"/> {user.email}</div>
-      {user.subDate && <>
-        <div className="data">{user.subscription}</div>
-        <div className="data">{formatDate(user.subDate)}</div>
-      </>}
+    <div className="card-body">
+      <div className="user-plan">{user.subscription || "Free"} Plan</div>
+      <div className="user-name">@{user.username || user.email.split('@')[0]}</div>
+      <div className="user-email">
+        <Mail size={14} /> {user.email}
       </div>
+      {user.subDate && (
+        <div className="user-date">
+          <Calendar size={14} /> {formatDate(user.subDate)}
+        </div>
+      )}
+    </div>
   </NavLink>
 )};
 
