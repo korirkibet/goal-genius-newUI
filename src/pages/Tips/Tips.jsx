@@ -25,7 +25,7 @@ export default function Tips() {
   const [user, setUser] = useRecoilState(userState);
   const [isAdmin, setAdmin] = useState(false);
   const [filteredTips, setFilteredTips] = useState(null);
-  const [gamesType, setGamesType] = useState("1X2");
+  const [gamesType, setGamesType] = useState("ALL");
   const [tips, setTips] = useState(null);
 
   const tabBoxRef = useRef();
@@ -163,6 +163,7 @@ export default function Tips() {
   }, [user]);
 
   const typeLabels = {
+    "ALL": "All",
     "1X2": "WDW",
     "CS": "CS",
     "GG": "BTTS",
@@ -235,7 +236,7 @@ export default function Tips() {
               'Night': 'Night (6PM-12AM)'
             }[filteredTip.timeSlot];
 
-            const filteredItems = filteredTip.items.filter(doc => doc.type === gamesType);
+            const filteredItems = gamesType === "ALL" ? filteredTip.items : filteredTip.items.filter(doc => doc.type === gamesType);
 
             if (filteredItems.length === 0) return null;
 
