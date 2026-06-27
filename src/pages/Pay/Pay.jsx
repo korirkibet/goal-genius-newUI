@@ -21,7 +21,7 @@ const PAYMENT_METHODS = {
 export default function Pay() {
   const [user, setUser] = useRecoilState(userState);
   const [loading, setLoading] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState(PAYMENT_METHODS.PAYSTACK);
+  const [paymentMethod, setPaymentMethod] = useState(PAYMENT_METHODS.MPESA);
   const [phone, setPhone] = useState('');
   const [paymentStatus, setPaymentStatus] = useState(null);
   const [pollCount, setPollCount] = useState(0);
@@ -226,18 +226,19 @@ export default function Pay() {
           
           <div className="method-tabs">
             <button
-              className={`method-tab ${paymentMethod === PAYMENT_METHODS.PAYSTACK ? 'active' : ''}`}
-              onClick={() => setPaymentMethod(PAYMENT_METHODS.PAYSTACK)}
-            >
-              <CreditCard size={20} />
-              <span>Card Payment</span>
-            </button>
-            <button
               className={`method-tab ${paymentMethod === PAYMENT_METHODS.MPESA ? 'active' : ''}`}
               onClick={() => setPaymentMethod(PAYMENT_METHODS.MPESA)}
             >
               <Smartphone size={20} />
               <span>M-Pesa</span>
+            </button>
+            <button
+              className={`method-tab ${paymentMethod === PAYMENT_METHODS.PAYSTACK ? 'active' : ''}`}
+              onClick={() => setPaymentMethod(PAYMENT_METHODS.PAYSTACK)}
+              style={{display: "none"}}
+            >
+              <CreditCard size={20} />
+              <span>Card Payment</span>
             </button>
           </div>
 
