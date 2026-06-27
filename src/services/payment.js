@@ -118,19 +118,21 @@ export const STATUS_MESSAGES = {
 
 /**
  * Payment status polling helper
+ * Polls the payment API /status endpoint and only calls onComplete
+ * when the payment is CONFIRMED (paid === true).
  * @param {string} reference - Payment reference
  * @param {Object} options - Polling options
- * @param {number} options.interval - Poll interval in ms (default: 5000)
- * @param {number} options.maxAttempts - Max attempts (default: 24)
- * @param {Function} options.onStatus - Callback for status updates
- * @param {Function} options.onComplete - Callback when payment completes
- * @param {Function} options.onFail - Callback when payment fails
+ * @param {number} options.interval - Poll interval in ms (default: 6000)
+ * @param {number} options.maxAttempts - Max attempts (default: 30)
+ * @param {Function} options.onStatus - Callback for each status check (result, attempts)
+ * @param {Function} options.onComplete - Callback when payment is CONFIRMED (paid=true)
+ * @param {Function} options.onFail - Callback when payment fails, times out, or is abandoned
  * @returns {Function} Cleanup function to stop polling
  */
 export function pollPaymentStatus(reference, options = {}) {
   const {
-    interval = 5000,
-    maxAttempts = 24,
+    interval = 6000,
+    maxAttempts = 30,
     onStatus,
     onComplete,
     onFail,
@@ -140,9 +142,16 @@ export function pollPaymentStatus(reference, options = {}) {
   let timer = null;
   let isRunning = true;
 
+  // Terminal statuses that mean the payment is done (one way or another)
+  const FAILED_STATUSES = ['failed', 'abandoned', 'reversed', 'cancelled'];
+  const SUCCESS_STATUS = 'success';
+  const WAITING_STATUSES = ['pending', 'processing', 'queued', 'ongoing', 'pay_offline', 'send_otp'];
+
   const poll = async () => {
-    if (!isRunning || attempts >= maxAttempts) {
-      onFail?.('Polling timeout');
+    if (!isRunning) return;
+    if (attempts >= maxAttempts) {
+      isRunning = false;
+      onFail?.('Payment is taking too long. Please check your M-Pesa messages and try again.');
       return;
     }
 
@@ -151,35 +160,48 @@ export function pollPaymentStatus(reference, options = {}) {
       attempts++;
       onStatus?.(result, attempts);
 
-      if (result.status === 'completed' || result.success) {
+      // CONFIRMED SUCCESS — payment is actually paid
+      if (result.paid === true || result.status === SUCCESS_STATUS) {
+        isRunning = false;
         onComplete?.(result);
-        isRunning = false;
         return;
       }
 
-      if (result.status === 'failed' || result.status === 'cancelled') {
-        onFail?.(result.message || 'Payment failed');
+      // Terminal failure — payment will never succeed
+      if (FAILED_STATUSES.includes(result.status)) {
         isRunning = false;
+        onFail?.(result.message || 'Payment was not completed. Please try again.');
         return;
       }
 
-      if (isRunning) {
+      // Still waiting — schedule next poll
+      if (isRunning && WAITING_STATUSES.includes(result.status)) {
         timer = setTimeout(poll, interval);
+        return;
+      }
+
+      // Unknown status — keep polling a few more times, then give up
+      if (isRunning && attempts < maxAttempts) {
+        timer = setTimeout(poll, interval);
+      } else {
+        isRunning = false;
+        onFail?.('Payment status unknown. Please check your M-Pesa messages.');
       }
     } catch (error) {
       attempts++;
-      onStatus?.({ error: error.message }, attempts);
+      onStatus?.({ error: error.message, status: 'error' }, attempts);
 
       if (isRunning && attempts < maxAttempts) {
         timer = setTimeout(poll, interval);
       } else {
-        onFail?.(error.message);
         isRunning = false;
+        onFail?.(error.message || 'Unable to check payment status. Please try again.');
       }
     }
   };
 
-  timer = setTimeout(poll, interval);
+  // Start first poll immediately (small delay to let Paystack start processing)
+  timer = setTimeout(poll, 2000);
 
   return () => {
     isRunning = false;
