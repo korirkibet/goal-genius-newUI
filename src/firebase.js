@@ -297,7 +297,7 @@ export const addMailList = async (data, setNotification, setEmail) => {
   }
 };
 
-export  const addTip = async (data, setNotification, setLoading) => {
+export const addTip = async (data, setNotification, setLoading) => {
   setLoading(true);
   const tipsDocRef = doc(db, "tips", data.home.trim() + data.away.trim() + data.date.split("/").join(""));
   await setDoc(tipsDocRef, {
@@ -320,7 +320,7 @@ export  const addTip = async (data, setNotification, setLoading) => {
   setLoading(false)
 };
 
-export  const updateTip = async (id, data, setNotification, setLoading, setData) => {
+export const updateTip = async (id, data, setNotification, setLoading, setData) => {
   setLoading(true);
   const tipsDocRef = doc(db, "tips", id);
   await updateDoc(tipsDocRef, {
@@ -351,7 +351,7 @@ export  const updateTip = async (id, data, setNotification, setLoading, setData)
   setLoading(false)
 };
 
-export  const addNews = async (data, setNotification, setLoading) => {
+export const addNews = async (data, setNotification, setLoading) => {
   setLoading(true);
   const newsDocRef = collection(db, "news");
   if (data.image) {
@@ -390,15 +390,71 @@ export  const addNews = async (data, setNotification, setLoading) => {
   
 };
 
-export const getTips= async (setTips, setLoading, currentDate) => {
+export const updateNews = async (id, data, setLoading, setNotification) => {
+  setLoading(true);
+  const newsDocRef = doc(db, "news", id);
+  
+  if (data.image) {
+    const imageRef = ref(storage, `blogs/${data.image.name.split(" ").join("_")}`);
+    const metadata = {
+      contentType: 'blogs/jpeg',
+    };
+    await uploadBytes(imageRef, data.image, metadata).then((response) => {
+      return getDownloadURL(response.ref);
+    }).then(async (downloadURL) => {
+      await updateDoc(newsDocRef, {
+        title: data.title,
+        description: data.description,
+        category: data.category,
+        imageUrl: downloadURL,
+      }).then(() => {
+        setNotification({
+          isVisible: true,
+          type: 'success',
+          message: 'Post updated successfully!',
+        });
+        setLoading(false);
+      }).catch(async (error) => {
+        setNotification({
+          isVisible: true,
+          type: 'error',
+          message: error.message,
+        });
+        setLoading(false);
+      });
+    });
+  } else {
+    await updateDoc(newsDocRef, {
+      title: data.title,
+      description: data.description,
+      category: data.category,
+    }).then(() => {
+      setNotification({
+        isVisible: true,
+        type: 'success',
+        message: 'Post updated successfully!',
+      });
+      setLoading(false);
+    }).catch(async (error) => {
+      setNotification({
+        isVisible: true,
+        type: 'error',
+        message: error.message,
+      });
+      setLoading(false);
+    });
+  }
+};
+
+export const getTips = async (setTips, setLoading, currentDate) => {
   setLoading(true);
   const tipsCollectionRef = collection(db, "tips");
-  var q = query(tipsCollectionRef,where("date", "==", currentDate));
+  var q = query(tipsCollectionRef, where("date", "==", currentDate));
 
   const tips = [];
   await getDocs(q).then((data) => {
     data.forEach((doc) => {
-      tips.push({id: doc.id,...doc.data()});
+      tips.push({id: doc.id, ...doc.data()});
     });
   }).then(() => {
     setTips(tips);

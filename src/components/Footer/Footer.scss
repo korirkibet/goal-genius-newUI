@@ -83,7 +83,8 @@
             li {
                 margin-bottom: 12px;
 
-                a {
+                a,
+                .footer-link-btn {
                     color: var(--grey);
                     text-decoration: none;
                     font-size: 0.9rem;
@@ -91,6 +92,11 @@
                     align-items: center;
                     gap: 4px;
                     transition: all 0.2s;
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                    padding: 0;
+                    font-family: inherit;
 
                     &:hover {
                         color: var(--blue);
@@ -98,7 +104,7 @@
                     }
 
                     svg {
-                        opacity: 0;
+                        opacity: 1;
                         transition: all 0.2s;
                     }
 

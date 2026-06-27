@@ -1,93 +1,209 @@
-.tip-card{
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: .1%;
-    background: var(--transparent);
+.tip-card {
+    background: var(--lite);
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--light-grey);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     max-width: 650px;
     width: 100%;
     cursor: default;
-    .center{
-        width: 100%;
-        height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    &:hover {
+        box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.1);
+        border-color: var(--blue);
+        transform: translateY(-2px);
+    }
+
+    &.premium {
+        border-left: 4px solid var(--blue);
+    }
+
+    &.hidden {
+        .team-name, .pick-value {
+            color: var(--grey);
+            font-style: italic;
+        }
+    }
+
+    .tip-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        background: linear-gradient(90deg, var(--light-color) 0%, var(--light-blue) 100%);
+        border-bottom: 1px solid var(--light-grey);
+
+        .tip-type {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--blue);
+            background: var(--lite);
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+
+        .premium-tag {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--lite);
+            background: linear-gradient(135deg, var(--blue), var(--dark-blue));
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+
+        .badge {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+
+            &.won {
+                background: var(--light-green);
+                color: var(--green);
+            }
+
+            &.lost {
+                background: var(--light-red);
+                color: var(--red);
+            }
+
+            &.live {
+                background: var(--light-blue);
+                color: var(--blue);
+                animation: pulse 2s infinite;
+            }
+
+            &.pending {
+                background: var(--light-grey);
+                color: var(--grey);
+            }
+        }
+    }
+
+    .tip-card-body {
+        padding: 16px;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        gap: .5rem;
-        .teams{
+        gap: 12px;
+
+        .teams {
             display: flex;
-            width: 100%;
-            gap: 5px;
-            flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            p{
-                width: 100%;
+            gap: 8px;
+
+            .team {
                 flex: 1;
-                display: flex;
-                align-items: center;
-                justify-content: space-around;
+                text-align: center;
 
-
-                overflow: hidden; /* Hide overflow content */
-                display: -webkit-box; /* Use the flexbox model for a multi-line block */
-                -webkit-line-clamp: 2; /* Show only 3 lines of text */
-                -webkit-box-orient: vertical; /* Set the box to be vertical */
-                text-overflow: ellipsis;
-
-                &:first-child{
-                    text-align: end;
+                .team-name {
+                    font-size: 0.95rem;
+                    font-weight: 600;
+                    color: var(--dark);
+                    display: block;
+                    word-break: break-word;
                 }
             }
-            .results{
-                width: 80px;
-                background: var(--dark-blue);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: var(--lite);
+
+            .vs {
+                font-size: 0.75rem;
+                font-weight: 700;
+                color: var(--grey);
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                padding: 4px 10px;
+                background: var(--light-grey);
+                border-radius: 8px;
             }
         }
 
-        .info{
-            color: var(--grey);
+        .pick-row {
             display: flex;
-            flex-wrap: wrap;
-            width: 100%;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: var(--light-blue);
+            border-radius: 10px;
+
+            .pick-label {
+                font-size: 0.75rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                color: var(--blue);
+            }
+
+            .pick-value {
+                font-size: 1rem;
+                font-weight: 700;
+                color: var(--dark);
+            }
+        }
+
+        .tip-meta {
+            display: flex;
             align-items: center;
             justify-content: space-between;
 
-            a{
+            .meta-item {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 0.85rem;
+                color: var(--grey);
+
+                &.odds {
+                    font-weight: 700;
+                    color: var(--blue);
+                    background: var(--light-blue);
+                    padding: 4px 10px;
+                    border-radius: 20px;
+                }
+            }
+        }
+    }
+
+    .tip-card-footer {
+        padding: 12px 16px;
+        border-top: 1px solid var(--light-grey);
+        display: flex;
+        justify-content: flex-end;
+
+        .edit-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--blue);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.2s;
+
+            &:hover {
                 color: var(--dark-blue);
             }
-            p{
-                display: flex;
-                padding: 0 0.3rem 0 0;
-                align-items: center;
-                font-size: 14px;
-                margin-bottom: auto;
-                span{
-                    margin-left: 5px;
-                    &.won{
-                        color: var(--blue);
-                    }
-                    &.lost{
-                        color: var(--red);
-                    }
-
-                    &.pending{
-                        color: var(--grey);
-                    }
-
-                    .icon{
-                        font-size: 14px;
-                        margin: 0 5px;
-                    }
-                }
-
-            }
         }
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
     }
 }
